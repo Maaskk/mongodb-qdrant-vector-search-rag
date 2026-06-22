@@ -76,8 +76,6 @@ def test_vector_search_maps_documents_to_contract(vector_384: list[float]) -> No
 def test_exact_search_mode_is_named_exact(vector_384: list[float]) -> None:
     retriever = MongoRetriever(FakeSearchCollection([{"_id": "mongo:0", "score": 1.0}]))
 
-    result = retriever.search_vector(
-        vector_384, query_id="q1", top_k=1, exact=True
-    )[0]
+    result = retriever.search_vector(vector_384, query_id="q1", top_k=1, exact=True)[0]
 
     assert result.search_mode == "exact"

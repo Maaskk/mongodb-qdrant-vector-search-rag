@@ -28,4 +28,3 @@ def test_config_can_be_built_without_uri_for_offline_validation(
 
     assert config.uri is None
     assert config.dimensions == 384
-

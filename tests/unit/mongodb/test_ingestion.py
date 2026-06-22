@@ -59,9 +59,7 @@ def test_ingestion_upserts_changed_chunks_and_skips_unchanged(
     )
     ingestor = MongoIngestor(collection, dead_letter_dir=tmp_path, sleep=lambda _: None)
 
-    summary = ingestor.ingest(
-        [sample_chunk, changed], [vector_384, vector_384], run_id="run-1"
-    )
+    summary = ingestor.ingest([sample_chunk, changed], [vector_384, vector_384], run_id="run-1")
 
     assert summary.accepted == 2
     assert summary.skipped == 1
@@ -94,9 +92,7 @@ def test_ingestion_retries_transient_mongodb_errors(
 def test_ingestion_dead_letters_exhausted_batches(
     sample_chunk: Chunk, vector_384: list[float], tmp_path: Path
 ) -> None:
-    collection = FakeCollection(
-        failures=[AutoReconnect("one"), AutoReconnect("two")]
-    )
+    collection = FakeCollection(failures=[AutoReconnect("one"), AutoReconnect("two")])
     ingestor = MongoIngestor(
         collection,
         dead_letter_dir=tmp_path,

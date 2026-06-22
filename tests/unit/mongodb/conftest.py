@@ -42,4 +42,3 @@ class FakeIndexCollection:
 @pytest.fixture
 def fake_index_collection() -> FakeIndexCollection:
     return FakeIndexCollection()
-

@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 import time
-from typing import Any, Callable
+from collections.abc import Callable
+from pathlib import Path
+from typing import Any, cast
 
 from pymongo.operations import SearchIndexModel
 
@@ -14,7 +15,7 @@ from vector_rag.mongodb_track.schema import IndexStatus
 
 def load_index_definition(path: Path) -> dict[str, Any]:
     with path.open(encoding="utf-8") as handle:
-        definition = json.load(handle)
+        definition = cast(dict[str, Any], json.load(handle))
     required = {"name", "type", "definition"}
     missing = required.difference(definition)
     if missing:

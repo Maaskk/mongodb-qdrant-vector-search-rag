@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
 import math
+from collections.abc import Mapping, Sequence
 
 
 def recall_at_k(ranking: Sequence[str], qrels: Mapping[str, int], k: int) -> float:
@@ -24,9 +24,8 @@ def mrr_at_k(ranking: Sequence[str], qrels: Mapping[str, int], k: int) -> float:
 
 def ndcg_at_k(ranking: Sequence[str], qrels: Mapping[str, int], k: int) -> float:
     def dcg(grades: Sequence[int]) -> float:
-        return sum(
-            (2**grade - 1) / math.log2(rank + 1)
-            for rank, grade in enumerate(grades, start=1)
+        return float(
+            sum((2**grade - 1) / math.log2(rank + 1) for rank, grade in enumerate(grades, start=1))
         )
 
     observed = [int(qrels.get(item, 0)) for item in ranking[:k]]

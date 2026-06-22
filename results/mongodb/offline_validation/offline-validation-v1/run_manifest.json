@@ -1,0 +1,11 @@
+{
+  "backend": "mongodb",
+  "corpus_sha256": "65edc33d22cc58f73ada3a926769bc0dfc1f2e319844ab3062cea97fdb5820d2",
+  "created_at": "2026-06-22T13:36:46.584898+00:00",
+  "dimensions": 384,
+  "embedding_model": "deterministic-feature-hashing-v1",
+  "environment": "offline_validation",
+  "queries_sha256": "1daca6c202c5379fba5771fab4b58499c9ccb2277a5ceb965be2d25eb4c06e85",
+  "run_id": "offline-validation-v1",
+  "warning": "offline_validation checks functionality only; its latency and ranking values are not MongoDB Atlas performance measurements"
+}

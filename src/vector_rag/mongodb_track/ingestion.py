@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable, Sequence
 import json
-from pathlib import Path
 import time
+from collections.abc import Callable, Sequence
+from pathlib import Path
 from typing import Any
 
 from pymongo import UpdateOne
@@ -87,9 +87,7 @@ class MongoIngestor:
                 updated += int(result.modified_count)
             except PyMongoError as error:
                 failed += len(documents)
-                dead_letter_path = self._write_dead_letters(
-                    documents, run_id=run_id, error=error
-                )
+                dead_letter_path = self._write_dead_letters(documents, run_id=run_id, error=error)
 
         return IngestionSummary(
             run_id=run_id,

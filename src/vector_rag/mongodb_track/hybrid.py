@@ -97,9 +97,7 @@ def rank_fusion_pipeline(
                         ],
                     }
                 },
-                "combination": {
-                    "weights": {"vector": vector_weight, "text": text_weight}
-                },
+                "combination": {"weights": {"vector": vector_weight, "text": text_weight}},
                 "scoreDetails": True,
             }
         },

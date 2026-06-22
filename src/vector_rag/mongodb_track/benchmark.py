@@ -2,24 +2,26 @@
 
 from __future__ import annotations
 
+import csv
+import json
+import re
+import time
 from collections import defaultdict
 from collections.abc import Mapping, Sequence
-import csv
 from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 from hashlib import sha256
-import json
 from pathlib import Path
-import re
-import time
 from typing import Any
 
 from vector_rag.contracts import Chunk, EvaluationQuery, RAGResult, RetrievalResult
 from vector_rag.io import load_jsonl
 from vector_rag.mongodb_track.embeddings import HashingEmbedder
 from vector_rag.mongodb_track.hybrid import reciprocal_rank_fusion
+from vector_rag.mongodb_track.ingestion import MongoIngestor
 from vector_rag.mongodb_track.metrics import mrr_at_k, ndcg_at_k, percentile, recall_at_k
 from vector_rag.mongodb_track.rag import ExtractiveGenerator, MongoRAGPipeline
+from vector_rag.mongodb_track.search import MongoRetriever
 
 
 @dataclass(frozen=True)
@@ -32,10 +34,7 @@ class RunManifest:
     dimensions: int
     created_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     backend: str = "mongodb"
-    warning: str = (
-        "offline_validation checks functionality only; its latency and ranking values are not "
-        "MongoDB Atlas performance measurements"
-    )
+    warning: str = ""
 
 
 class ArtifactWriter:
@@ -164,9 +163,7 @@ def run_offline_validation(
         {
             "environment": "offline_validation",
             "num_candidates": candidates,
-            "recall_at_5": next(
-                row["recall_at_5"] for row in summary_rows if row["mode"] == "ann"
-            ),
+            "recall_at_5": next(row["recall_at_5"] for row in summary_rows if row["mode"] == "ann"),
             "note": "functional sweep only; MongoDB ANN was not executed",
         }
         for candidates in (10, 25, 50, 100, 200)
@@ -178,10 +175,127 @@ def run_offline_validation(
         queries_sha256=_file_sha256(queries_path),
         embedding_model=embedder.model_name,
         dimensions=dimensions,
+        warning=(
+            "offline_validation checks functionality only; its latency and ranking values are "
+            "not MongoDB Atlas performance measurements"
+        ),
     )
     return ArtifactWriter(output_root, run_id=run_id).write(
         manifest, retrieval_results, rag_results, summary_rows, tuning_rows
     )
+
+
+def run_live_benchmark(
+    collection: Any,
+    embedder: Any,
+    *,
+    corpus_path: Path,
+    queries_path: Path,
+    qrels_path: Path,
+    output_root: Path,
+    run_id: str,
+    vector_index: str = "vector_index",
+    text_index: str = "text_index",
+    dimensions: int = 384,
+    top_k: int = 5,
+) -> Path:
+    """Ingest fixtures and execute the measured Atlas retrieval matrix."""
+
+    chunks = load_jsonl(corpus_path, Chunk)
+    queries = load_jsonl(queries_path, EvaluationQuery)
+    qrels = load_qrels(qrels_path)
+    chunk_vectors = embedder.embed([f"{chunk.title} {chunk.text}" for chunk in chunks])
+    query_vectors = embedder.embed([query.text for query in queries])
+    ingestion = MongoIngestor(collection, dimensions=dimensions).ingest(
+        chunks, chunk_vectors, run_id=run_id
+    )
+    if ingestion.failed:
+        raise RuntimeError(f"live ingestion failed for {ingestion.failed} chunks")
+    retriever = MongoRetriever(
+        collection,
+        vector_index=vector_index,
+        text_index=text_index,
+        dimensions=dimensions,
+        run_id=run_id,
+    )
+    retrieval_results: list[RetrievalResult] = []
+    rag_results: list[RAGResult] = []
+    results_by_mode: dict[str, list[RetrievalResult]] = defaultdict(list)
+    tuning_results: dict[int, list[RetrievalResult]] = defaultdict(list)
+    chunks_by_id = {chunk.chunk_id: chunk for chunk in chunks}
+
+    for query, query_vector in zip(queries, query_vectors, strict=True):
+        exact = retriever.search_vector(
+            query_vector, query_id=query.query_id, top_k=top_k, exact=True
+        )
+        ann = retriever.search_vector(
+            query_vector,
+            query_id=query.query_id,
+            top_k=top_k,
+            num_candidates=100,
+        )
+        filtered = retriever.search_vector(
+            query_vector,
+            query_id=query.query_id,
+            top_k=top_k,
+            num_candidates=100,
+            filters=query.filters or None,
+            filter_name="query_filters" if query.filters else "none",
+        )
+        text = retriever.search_text(query.text, query_id=query.query_id, top_k=top_k)
+        hybrid = reciprocal_rank_fusion(ann, text, top_k=top_k)
+        modes = {
+            "exact": exact,
+            "ann": ann,
+            "filtered_ann": filtered,
+            "text": text,
+            "hybrid_rrf": hybrid,
+        }
+        for mode, hits in modes.items():
+            retrieval_results.extend(hits)
+            results_by_mode[mode].extend(hits)
+        evidence = [chunks_by_id[hit.chunk_id] for hit in hybrid if hit.chunk_id in chunks_by_id]
+        rag_results.append(
+            MongoRAGPipeline(ExtractiveGenerator(), run_id=run_id).answer(
+                query,
+                evidence,
+                retrieval_latency_ms=max((hit.latency_ms for hit in hybrid), default=0.0),
+            )
+        )
+        for candidates in (10, 25, 50, 100, 200):
+            tuning_results[candidates].extend(
+                retriever.search_vector(
+                    query_vector,
+                    query_id=query.query_id,
+                    top_k=top_k,
+                    num_candidates=candidates,
+                )
+            )
+
+    summary_rows = _summaries(results_by_mode, qrels, environment="atlas")
+    tuning_rows: list[dict[str, Any]] = []
+    for candidates, results in tuning_results.items():
+        summary = _summaries({"ann": results}, qrels, environment="atlas")[0]
+        tuning_rows.append({"num_candidates": candidates, **summary})
+    manifest = RunManifest(
+        run_id=run_id,
+        environment="atlas",
+        corpus_sha256=_file_sha256(corpus_path),
+        queries_sha256=_file_sha256(queries_path),
+        embedding_model=str(embedder.model_name),
+        dimensions=dimensions,
+        warning=(
+            "Measured on the connected Atlas deployment; results are specific to its tier, "
+            "region, load, corpus, and index state"
+        ),
+    )
+    run_dir = ArtifactWriter(output_root, run_id=run_id).write(
+        manifest, retrieval_results, rag_results, summary_rows, tuning_rows
+    )
+    (run_dir / "ingestion_summary.json").write_text(
+        json.dumps(ingestion.to_dict(), indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    return run_dir
 
 
 def _offline_vector_hits(
@@ -256,6 +370,8 @@ def _offline_text_hits(
 def _summaries(
     results_by_mode: Mapping[str, Sequence[RetrievalResult]],
     qrels: Mapping[str, Mapping[str, int]],
+    *,
+    environment: str = "offline_validation",
 ) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for mode, results in results_by_mode.items():
@@ -276,7 +392,7 @@ def _summaries(
             latencies.append(ordered[0].latency_ms)
         rows.append(
             {
-                "environment": "offline_validation",
+                "environment": environment,
                 "mode": mode,
                 "queries": len(by_query),
                 "recall_at_5": sum(recalls) / len(recalls),
@@ -284,7 +400,11 @@ def _summaries(
                 "ndcg_at_10": sum(ndcgs) / len(ndcgs),
                 "latency_p50_ms": percentile(latencies, 50),
                 "latency_p95_ms": percentile(latencies, 95),
-                "latency_warning": "Python functional timing; not MongoDB latency",
+                "latency_warning": (
+                    "Python functional timing; not MongoDB latency"
+                    if environment == "offline_validation"
+                    else "Client-observed end-to-end aggregation latency"
+                ),
             }
         )
     return rows

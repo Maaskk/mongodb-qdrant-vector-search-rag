@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from collections.abc import Sequence
-from html import escape
 import json
 import re
 import time
+from collections.abc import Sequence
+from html import escape
 from typing import Protocol
 from urllib.error import URLError
 from urllib.request import Request, urlopen
@@ -99,9 +99,9 @@ class OllamaGenerator:
         )
         request = Request(
             self.endpoint,
-            data=json.dumps(
-                {"model": self.model, "prompt": prompt, "stream": False}
-            ).encode("utf-8"),
+            data=json.dumps({"model": self.model, "prompt": prompt, "stream": False}).encode(
+                "utf-8"
+            ),
             headers={"Content-Type": "application/json"},
             method="POST",
         )

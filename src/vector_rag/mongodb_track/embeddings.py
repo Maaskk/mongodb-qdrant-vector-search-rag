@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from collections.abc import Sequence
-from hashlib import sha256
 import importlib
 import math
 import re
+from collections.abc import Sequence
+from hashlib import sha256
 from typing import Any
 
 

@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from math import isfinite
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 from vector_rag.contracts import Chunk
 

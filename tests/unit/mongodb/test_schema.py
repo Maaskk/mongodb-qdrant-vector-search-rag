@@ -27,4 +27,3 @@ def test_embedding_rejects_non_finite_values(vector_384: list[float]) -> None:
 
     with pytest.raises(ValueError, match="finite"):
         validate_embedding(vector_384, dimensions=384)
-
