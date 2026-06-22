@@ -1,0 +1,7 @@
+query_id	chunk_id	relevance
+q1	mongodb-overview:0	2
+q1	qdrant-overview:0	2
+q2	hnsw-tradeoffs:0	2
+q3	hybrid-search:0	2
+q4	rag-grounding:0	2
+q5	metadata-filtering:0	2
