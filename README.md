@@ -31,11 +31,10 @@ Each track is standalone. Both contributors can ingest, retrieve, run RAG, test,
 
 ## Contributor Tracks
 
-| Contributor | Branch | Independent track | 
-| --- | --- | --- | 
-| Ossama | `ossama` | MongoDB modeling, resilient ingestion, ANN/ENN, filtering, lexical search, reciprocal-rank fusion, grounded RAG, and advanced tuning | 
-
-| Hamza El Haddaji | `HamzaElhaddaji` | Docker Qdrant, collection and payload indexes, dense retrieval with fixed defaults, filters, shared RAG helpers, and standard benchmark | 
+| Contributor | Branch | Independent track |
+| --- | --- | --- |
+| Ossama | `ossama` | MongoDB modeling, resilient ingestion, ANN/ENN, filtering, lexical search, reciprocal-rank fusion, grounded RAG, and advanced tuning |
+| Hamza El Haddaji | `HamzaElhaddaji` | Docker Qdrant, collection and payload indexes, dense retrieval with fixed defaults, filters, shared RAG helpers, and standard benchmark |
 
 The complete acceptance criteria and output paths are in [TASKS.md](TASKS.md). The working rules are in [COLLABORATION.md](COLLABORATION.md).
 
