@@ -1,6 +1,6 @@
 environment,mode,queries,recall_at_5,mrr_at_10,ndcg_at_10,latency_p50_ms,latency_p95_ms,latency_warning
-offline_validation,exact,5,1.0,1.0,0.9754430630676099,0.19607799913501367,0.20799679768970236,Python functional timing; not MongoDB latency
-offline_validation,ann,5,1.0,1.0,0.9754430630676099,0.19607799913501367,0.20799679768970236,Python functional timing; not MongoDB latency
-offline_validation,filtered_ann,5,1.0,1.0,0.9754430630676099,0.07469500269507989,0.2330133953364566,Python functional timing; not MongoDB latency
-offline_validation,text,5,1.0,1.0,1.0,0.0830610006232746,0.14995119854575023,Python functional timing; not MongoDB latency
-offline_validation,hybrid_rrf,5,1.0,1.0,0.9839441578296375,0.19607799913501367,0.20799679768970236,Python functional timing; not MongoDB latency
+offline_validation,exact,5,1.0,1.0,0.9754430630676099,0.36018000537296757,0.43632440210785717,Python functional timing; not MongoDB latency
+offline_validation,ann,5,1.0,1.0,0.9754430630676099,0.36018000537296757,0.43632440210785717,Python functional timing; not MongoDB latency
+offline_validation,filtered_ann,5,1.0,1.0,0.9754430630676099,0.3681980015244335,0.7206104026408866,Python functional timing; not MongoDB latency
+offline_validation,text,5,1.0,1.0,1.0,0.1390249963151291,0.1450241994461976,Python functional timing; not MongoDB latency
+offline_validation,hybrid_rrf,5,1.0,1.0,0.9839441578296375,0.36018000537296757,0.43632440210785717,Python functional timing; not MongoDB latency

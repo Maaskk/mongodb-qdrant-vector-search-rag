@@ -63,6 +63,7 @@ def test_artifact_writer_creates_complete_immutable_run(tmp_path: Path) -> None:
     assert json.loads((run_dir / "run_manifest.json").read_text())["environment"] == (
         "offline_validation"
     )
+    assert b"\r\n" not in (run_dir / "benchmark_summary.csv").read_bytes()
 
     with pytest.raises(FileExistsError):
         writer.write(manifest, [], [], [], [])

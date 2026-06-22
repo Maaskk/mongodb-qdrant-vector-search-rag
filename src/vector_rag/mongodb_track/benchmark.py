@@ -79,7 +79,7 @@ class ArtifactWriter:
         with path.open("w", encoding="utf-8", newline="") as handle:
             if not fieldnames:
                 return
-            writer = csv.DictWriter(handle, fieldnames=fieldnames)
+            writer = csv.DictWriter(handle, fieldnames=fieldnames, lineterminator="\n")
             writer.writeheader()
             writer.writerows(rows)
 
