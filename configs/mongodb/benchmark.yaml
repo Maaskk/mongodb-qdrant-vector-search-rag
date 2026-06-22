@@ -1,0 +1,15 @@
+backend: mongodb
+embedding:
+  model: sentence-transformers/all-MiniLM-L6-v2
+  dimensions: 384
+retrieval:
+  top_k: [1, 3, 5, 10]
+  modes: [exact, ann, filtered_ann, text, hybrid_rrf]
+  num_candidates: [10, 25, 50, 100, 200]
+  rank_constant: 60
+generation:
+  provider: extractive
+  optional_local_provider: ollama
+  max_context_characters: 8000
+evaluation:
+  metrics: [recall_at_5, mrr_at_10, ndcg_at_10, latency_p50_ms, latency_p95_ms]
