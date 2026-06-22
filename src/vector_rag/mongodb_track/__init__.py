@@ -2,6 +2,7 @@
 
 from vector_rag.mongodb_track.config import MongoConfig, MongoConfigError
 from vector_rag.mongodb_track.indexes import IndexManager
+from vector_rag.mongodb_track.ingestion import MongoIngestor
 from vector_rag.mongodb_track.schema import IndexStatus, IngestionSummary, chunk_document
 
 __all__ = [
@@ -10,5 +11,6 @@ __all__ = [
     "IngestionSummary",
     "MongoConfig",
     "MongoConfigError",
+    "MongoIngestor",
     "chunk_document",
 ]
