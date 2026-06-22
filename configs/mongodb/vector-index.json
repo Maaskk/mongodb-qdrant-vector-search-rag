@@ -1,0 +1,18 @@
+{
+  "name": "vector_index",
+  "type": "vectorSearch",
+  "definition": {
+    "fields": [
+      {
+        "type": "vector",
+        "path": "embedding",
+        "numDimensions": 384,
+        "similarity": "cosine"
+      },
+      { "type": "filter", "path": "category" },
+      { "type": "filter", "path": "language" },
+      { "type": "filter", "path": "source" },
+      { "type": "filter", "path": "published_at" }
+    ]
+  }
+}

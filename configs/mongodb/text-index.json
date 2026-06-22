@@ -1,0 +1,13 @@
+{
+  "name": "text_index",
+  "type": "search",
+  "definition": {
+    "mappings": {
+      "dynamic": false,
+      "fields": {
+        "title": { "type": "string" },
+        "text": { "type": "string" }
+      }
+    }
+  }
+}

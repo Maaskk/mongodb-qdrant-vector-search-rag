@@ -1,0 +1,14 @@
+"""MongoDB implementation of the vector-search and RAG track."""
+
+from vector_rag.mongodb_track.config import MongoConfig, MongoConfigError
+from vector_rag.mongodb_track.indexes import IndexManager
+from vector_rag.mongodb_track.schema import IndexStatus, IngestionSummary, chunk_document
+
+__all__ = [
+    "IndexManager",
+    "IndexStatus",
+    "IngestionSummary",
+    "MongoConfig",
+    "MongoConfigError",
+    "chunk_document",
+]
