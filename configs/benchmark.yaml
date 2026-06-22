@@ -1,0 +1,15 @@
+schema_version: 1
+corpus: data/demo/corpus.jsonl
+queries: data/evaluation/queries.jsonl
+qrels: data/evaluation/qrels.tsv
+top_k: [5, 10]
+warmup_queries: 2
+measured_repetitions: 5
+metrics:
+  - recall_at_k
+  - mrr_at_10
+  - ndcg_at_10
+  - latency_p50_ms
+  - latency_p95_ms
+  - ingestion_chunks_per_second
+random_seed: 42

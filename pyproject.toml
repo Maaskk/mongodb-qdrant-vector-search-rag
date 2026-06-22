@@ -1,0 +1,51 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "vector-rag-benchmark"
+version = "0.1.0"
+description = "MongoDB Vector Search vs Qdrant semantic search and RAG benchmark"
+readme = "README.md"
+requires-python = ">=3.11,<3.15"
+license = { text = "MIT" }
+authors = [
+  { name = "Ossama Ashad" },
+  { name = "Hamza El Haddaji" },
+]
+dependencies = [
+  "pydantic>=2.10,<3",
+  "PyYAML>=6.0,<7",
+]
+
+[project.optional-dependencies]
+mongodb = ["pymongo>=4.10,<5"]
+qdrant = ["qdrant-client>=1.13,<2"]
+embeddings = ["sentence-transformers>=3.3,<6"]
+generation = ["openai>=1.60,<3"]
+dev = [
+  "mypy>=1.14,<3",
+  "pytest>=8.3,<10",
+  "ruff>=0.9,<1",
+  "types-PyYAML>=6.0,<7",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/vector_rag"]
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+files = ["src"]
+

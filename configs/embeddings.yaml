@@ -1,0 +1,8 @@
+schema_version: 1
+provider: sentence_transformers
+model: sentence-transformers/all-MiniLM-L6-v2
+dimensions: 384
+distance: cosine
+normalize: true
+batch_size: 64
+
