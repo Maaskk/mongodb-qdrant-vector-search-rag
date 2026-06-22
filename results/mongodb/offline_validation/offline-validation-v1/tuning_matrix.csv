@@ -1,0 +1,6 @@
+environment,num_candidates,recall_at_5,note
+offline_validation,10,1.0,functional sweep only; MongoDB ANN was not executed
+offline_validation,25,1.0,functional sweep only; MongoDB ANN was not executed
+offline_validation,50,1.0,functional sweep only; MongoDB ANN was not executed
+offline_validation,100,1.0,functional sweep only; MongoDB ANN was not executed
+offline_validation,200,1.0,functional sweep only; MongoDB ANN was not executed
