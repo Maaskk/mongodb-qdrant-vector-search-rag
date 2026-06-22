@@ -20,7 +20,7 @@ src/vector_rag/backend.py
 
 If a shared contract must change, open a separate proposal pull request into `main` first.
 
-## Ossama - Advanced MongoDB Track
+## Ossama -  MongoDB Track
 
 **Branch:** `ossama`
 
@@ -113,7 +113,7 @@ reports/sections/mongodb.md
 
 **Acceptance:** Every result records corpus hash, query-set hash, embedding model, configuration, timestamp, and run ID; the report separates measured results from interpretation.
 
-## Hamza El Haddaji - Guided Qdrant Track
+## Hamza El Haddaji -  Qdrant Track
 
 **Branch:** `HamzaElhaddaji`
 
