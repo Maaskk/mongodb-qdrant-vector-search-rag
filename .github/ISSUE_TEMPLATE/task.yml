@@ -1,0 +1,55 @@
+name: Contributor task
+description: Plan a reproducible MongoDB, Qdrant, RAG, or integration task.
+title: "[Track] "
+labels: ["data-engineering"]
+body:
+  - type: dropdown
+    id: owner
+    attributes:
+      label: Owner
+      options:
+        - Ossama
+        - Hamza
+        - Shared
+    validations:
+      required: true
+  - type: dropdown
+    id: backend
+    attributes:
+      label: Backend
+      options:
+        - MongoDB
+        - Qdrant
+        - Shared contracts
+        - Final integration
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope and owned files
+      description: Describe the bounded change and list the paths this task may modify.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: List observable completion conditions and expected artifacts.
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification command
+      description: Provide the exact test or benchmark command and expected result.
+    validations:
+      required: true
+  - type: checkboxes
+    id: contract
+    attributes:
+      label: Fairness contract
+      options:
+        - label: This task preserves the frozen corpus, embeddings, queries, and result schema.
+          required: true
+
