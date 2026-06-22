@@ -36,6 +36,7 @@ packages = ["src/vector_rag"]
 [tool.pytest.ini_options]
 addopts = "-ra"
 testpaths = ["tests"]
+pythonpath = ["src"]
 
 [tool.ruff]
 line-length = 100
@@ -48,4 +49,3 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 python_version = "3.11"
 strict = true
 files = ["src"]
-
