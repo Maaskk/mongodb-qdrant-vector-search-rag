@@ -1,0 +1,21 @@
+{
+  "backend": "qdrant",
+  "metadata": {
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "embedding_dimension": 384,
+    "similarity_metric": "cosine",
+    "corpus_path": "data/demo/corpus.jsonl",
+    "queries_path": "data/evaluation/queries.jsonl"
+  },
+  "ingestion": {
+    "chunks_ingested": 6,
+    "total_time_seconds": 0.13685822486877441,
+    "throughput_chunks_per_sec": 43.840989503941465
+  },
+  "retrieval": {
+    "num_queries_tested": 5,
+    "p50_latency_ms": 1.0039806365966797,
+    "p95_latency_ms": 1.9960403442382812,
+    "avg_latency_ms": 1.200723648071289
+  }
+}
