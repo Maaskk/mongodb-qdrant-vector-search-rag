@@ -1,0 +1,13 @@
+collection_name: rag_corpus
+endpoint: http://localhost:6333
+vector_size: 384
+distance: cosine
+embedding_model: sentence-transformers/all-MiniLM-L6-v2
+payload_indexes:
+  - category
+  - language
+  - source
+owned_by: HamzaElhaddaji
+notes:
+  - "Use the frozen project corpus, queries, qrels, and embedding configuration."
+  - "Payload filters must be exported in the shared RetrievalResult contract."

@@ -1,0 +1,2 @@
+environment,mode,queries,recall_at_5,mrr_at_10,ndcg_at_10,latency_p50_ms,latency_p95_ms,latency_warning
+local_smoke,dense,5,not_recorded,not_recorded,not_recorded,1.0039806365966797,1.9960403442382812,Hamza smoke result did not export per-query relevance metrics

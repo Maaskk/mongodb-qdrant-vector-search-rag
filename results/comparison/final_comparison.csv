@@ -1,0 +1,3 @@
+backend,run_type,status,corpus_chunks,queries,search_modes,recall_at_5,latency_p50_ms,notes
+MongoDB Vector Search,offline_validation,functional_validation,6,5,exact|ann|filtered_ann|text|hybrid_rrf,1.0,0.36018000537296757,Credential-free validation only; not Atlas performance
+Qdrant,local_smoke,smoke_measurement,6,5,dense,not_recorded,1.0039806365966797,Hamza result verifies local Qdrant flow but still needs qrels metrics for fair comparison

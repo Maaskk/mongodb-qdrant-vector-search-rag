@@ -6,6 +6,22 @@
 
 This public Master S2 data-engineering project compares two complete retrieval-augmented generation pipelines over the same corpus, embedding model, queries, relevance labels, and output contracts.
 
+## Frontend Demo
+
+The project includes a handcrafted static frontend in [docs/index.html](docs/index.html). It is designed for GitHub Pages and presents the method, current evidence, mini RAG lab, and links a professor can audit quickly.
+
+If GitHub Pages is enabled for the repo, the expected public URL is:
+
+```text
+https://maaskk.github.io/mongodb-qdrant-vector-search-rag/
+```
+
+## Current Integration Status
+
+- Ossama's MongoDB track is complete as an offline-validation pipeline with five retrieval modes, grounded RAG controls, benchmark artifacts, and a report section.
+- Hamza's Qdrant branch was integrated and repaired into `src/vector_rag/qdrant_track/`; it now has lazy optional dependencies, deterministic point IDs, filter forwarding, unit tests, and a smoke benchmark summary.
+- The committed final comparison is intentionally honest: MongoDB has functional validation artifacts, while Qdrant still needs a full qrels-backed export before strict quality claims.
+
 ## Research Question
 
 How do MongoDB Vector Search and Qdrant differ in retrieval quality, filtered-search behavior, ingestion performance, latency, operational complexity, and suitability for grounded RAG?
@@ -81,8 +97,9 @@ Ossama copies `.env.example` to `.env` and supplies a MongoDB Atlas URI. Secrets
 | `tests/` | Offline contract and fixture tests; backend integration tests later |
 | `results/mongodb/` | Ossama's versioned benchmark artifacts |
 | `results/qdrant/` | Hamza's versioned benchmark artifacts |
+| `results/comparison/` | Preliminary side-by-side comparison status |
 | `reports/sections/` | Independently authored report sections |
-| `docs/` | Architecture, approved design, and implementation plan |
+| `docs/` | Architecture, approved design, implementation plan, and static frontend |
 
 ## Quality Rules
 
@@ -95,4 +112,3 @@ Ossama copies `.env.example` to `.env` and supplies a MongoDB Atlas URI. Secrets
 ## License
 
 The starter code and project-authored demonstration data are released under the MIT License.
-

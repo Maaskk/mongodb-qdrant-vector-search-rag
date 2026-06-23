@@ -1,0 +1,12 @@
+{
+  "backend": "qdrant",
+  "environment": "local_smoke",
+  "run_id": "hamza-qdrant-smoke-v1",
+  "chunks_ingested": 6,
+  "total_time_seconds": 0.13685822486877441,
+  "throughput_chunks_per_sec": 43.840989503941465,
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "embedding_dimension": 384,
+  "corpus_path": "data/demo/corpus.jsonl",
+  "idempotence_note": "Backend now uses deterministic SHA-256-derived point ids so repeated upserts target the same Qdrant points."
+}

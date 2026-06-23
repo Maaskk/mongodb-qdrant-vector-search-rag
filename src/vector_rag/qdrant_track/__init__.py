@@ -1,4 +1,4 @@
-"""Backward-compatible import path for Hamza's Qdrant backend."""
+"""Qdrant track owned by Hamza El Haddaji."""
 
 from vector_rag.qdrant_track.backend import QdrantVectorBackend, stable_point_id
 

@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MongoDB Vector Search vs Qdrant — RAG Study</title>
+    <meta
+      name="description"
+      content="A human-readable Master S2 project comparing MongoDB Vector Search, Qdrant, semantic retrieval, and grounded RAG."
+    >
+    <link rel="stylesheet" href="assets/styles.css">
+  </head>
+  <body>
+    <header class="hero">
+      <nav class="nav" aria-label="Project navigation">
+        <a href="#method">Method</a>
+        <a href="#comparison">Comparison</a>
+        <a href="#lab">Mini lab</a>
+        <a href="#evidence">Evidence</a>
+      </nav>
+
+      <section class="hero-grid">
+        <div>
+          <p class="eyebrow">Master S2 · Data engineering project</p>
+          <h1>Vector search with receipts, not vibes.</h1>
+          <p class="lede">
+            We built a comparative RAG study around MongoDB Vector Search and Qdrant:
+            same corpus, same queries, same embedding contract, different database philosophies.
+          </p>
+          <div class="actions">
+            <a class="button primary" href="../reports/final_report.md">Read the final report</a>
+            <a class="button ghost" href="../reports/sections/mongodb.md">Open Ossama's MongoDB section</a>
+          </div>
+        </div>
+        <aside class="hero-card" aria-label="Project snapshot">
+          <span class="card-kicker">Project pulse</span>
+          <strong>6 chunks · 5 benchmark queries · 2 engines</strong>
+          <p>
+            The repo now separates complete evidence from smoke evidence, which makes the comparison
+            stronger and more honest.
+          </p>
+        </aside>
+      </section>
+    </header>
+
+    <main>
+      <section id="method" class="section">
+        <div class="section-heading">
+          <p class="eyebrow">What we actually built</p>
+          <h2>Two independent tracks, one frozen contract.</h2>
+        </div>
+        <div class="track-grid">
+          <article class="track-card mongodb">
+            <span>Ossama</span>
+            <h3>MongoDB Vector Search</h3>
+            <p>
+              BSON document model, idempotent ingestion, Atlas Search indexes, exact/vector/text/
+              filtered/hybrid retrieval, and cited RAG answers with refusal behavior.
+            </p>
+            <ul>
+              <li>Five retrieval modes</li>
+              <li>Offline validation artifacts</li>
+              <li>Advanced report section</li>
+            </ul>
+          </article>
+
+          <article class="track-card qdrant">
+            <span>Hamza</span>
+            <h3>Qdrant</h3>
+            <p>
+              Dedicated vector collection, payload metadata, deterministic point ids, keyword
+              payload indexes, dense retrieval, and a local smoke benchmark.
+            </p>
+            <ul>
+              <li>Proper qdrant_track package</li>
+              <li>Filter forwarding</li>
+              <li>Unit-tested without Docker</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="flow" aria-label="Retrieval augmented generation flow">
+        <div class="flow-step">Corpus</div>
+        <div class="flow-line"></div>
+        <div class="flow-step">Embeddings</div>
+        <div class="flow-line"></div>
+        <div class="flow-step">Vector DB</div>
+        <div class="flow-line"></div>
+        <div class="flow-step">Retrieved evidence</div>
+        <div class="flow-line"></div>
+        <div class="flow-step">Cited answer</div>
+      </section>
+
+      <section id="comparison" class="section split">
+        <div>
+          <p class="eyebrow">Comparison status</p>
+          <h2>Useful now, strict after one more Qdrant export.</h2>
+          <p>
+            MongoDB has full offline-validation rows. Qdrant has a local smoke result from Hamza's
+            branch. The frontend shows both, but it does not pretend those two environments are the
+            same measurement.
+          </p>
+        </div>
+        <div class="metric-board" aria-label="Current benchmark cards">
+          <article>
+            <span>MongoDB validation</span>
+            <strong>Recall@5: 1.00</strong>
+            <p>Functional validation across exact, ANN, filtered ANN, text, and hybrid RRF modes.</p>
+          </article>
+          <article>
+            <span>Qdrant smoke</span>
+            <strong>p50: 1.00 ms</strong>
+            <p>Local dense-search smoke result; relevance metrics still need export.</p>
+          </article>
+          <article>
+            <span>Shared fairness</span>
+            <strong>384-dim cosine</strong>
+            <p>Both tracks use the frozen corpus, queries, and all-MiniLM-L6-v2 model contract.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="lab" class="section lab">
+        <div class="section-heading">
+          <p class="eyebrow">Mini lab</p>
+          <h2>Click a question and see the evidence style.</h2>
+        </div>
+        <div class="lab-grid">
+          <div class="query-list" id="queryList" aria-label="Evaluation questions"></div>
+          <article class="answer-card" aria-live="polite">
+            <span id="answerLabel">Selected query</span>
+            <h3 id="answerTitle">How do MongoDB and Qdrant store vectors with metadata?</h3>
+            <p id="answerText">
+              MongoDB keeps embeddings beside BSON documents; Qdrant stores vectors with payload
+              metadata. Both designs can support semantic search and filters.
+            </p>
+            <div class="citation" id="citationBox">Cites: mongodb-overview:0 · qdrant-overview:0</div>
+          </article>
+        </div>
+      </section>
+
+      <section id="evidence" class="section evidence">
+        <div>
+          <p class="eyebrow">Repo evidence</p>
+          <h2>The links a professor will actually care about.</h2>
+        </div>
+        <div class="evidence-grid">
+          <a href="../src/vector_rag/mongodb_track/benchmark.py">MongoDB benchmark code</a>
+          <a href="../src/vector_rag/qdrant_track/backend.py">Qdrant backend code</a>
+          <a href="../results/mongodb/offline_validation/offline-validation-v1/benchmark_summary.csv">
+            MongoDB summary CSV
+          </a>
+          <a href="../results/qdrant/benchmark_summary.csv">Qdrant smoke summary</a>
+          <a href="../results/comparison/final_comparison.csv">Preliminary comparison CSV</a>
+          <a href="../reports/sections/qdrant.md">Hamza's Qdrant section</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>
+        Built for a data-engineering comparison: semantic search, NoSQL design, and grounded RAG.
+      </p>
+    </footer>
+
+    <script src="assets/app.js"></script>
+  </body>
+</html>
