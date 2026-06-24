@@ -1,169 +1,292 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>MongoDB Vector Search vs Qdrant — RAG Study</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="A human-readable Master S2 project comparing MongoDB Vector Search, Qdrant, semantic retrieval, and grounded RAG."
-    >
-    <link rel="stylesheet" href="assets/styles.css">
+      content="Interface web interactive pour comparer MongoDB Vector Search et Qdrant dans un pipeline RAG."
+    />
+    <title>Laboratoire Vector Search & RAG</title>
+    <link rel="stylesheet" href="./assets/styles.css" />
   </head>
   <body>
-    <header class="hero">
-      <nav class="nav" aria-label="Project navigation">
-        <a href="#method">Method</a>
-        <a href="#comparison">Comparison</a>
-        <a href="#lab">Mini lab</a>
-        <a href="#evidence">Evidence</a>
-      </nav>
+    <canvas id="spaceFieldCanvas" class="space-field" aria-hidden="true"></canvas>
 
-      <section class="hero-grid">
-        <div>
-          <p class="eyebrow">Master S2 · Data engineering project</p>
-          <h1>Vector search with receipts, not vibes.</h1>
-          <p class="lede">
-            We built a comparative RAG study around MongoDB Vector Search and Qdrant:
-            same corpus, same queries, same embedding contract, different database philosophies.
-          </p>
-          <div class="actions">
-            <a class="button primary" href="../reports/final_report.md">Read the final report</a>
-            <a class="button ghost" href="../reports/sections/mongodb.md">Open Ossama's MongoDB section</a>
-          </div>
-        </div>
-        <aside class="hero-card" aria-label="Project snapshot">
-          <span class="card-kicker">Project pulse</span>
-          <strong>6 chunks · 5 benchmark queries · 2 engines</strong>
-          <p>
-            The repo now separates complete evidence from smoke evidence, which makes the comparison
-            stronger and more honest.
-          </p>
-        </aside>
-      </section>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Laboratoire Vector Search et RAG">
+        <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true">
+          <rect class="mark-frame" x="4" y="4" width="40" height="40" rx="8"></rect>
+          <path class="mark-edge" d="M14 31L24 15L35 31"></path>
+          <circle class="mark-node mark-node-a" cx="14" cy="31" r="4.8"></circle>
+          <circle class="mark-node mark-node-b" cx="24" cy="15" r="4.8"></circle>
+          <circle class="mark-node mark-node-c" cx="35" cy="31" r="4.8"></circle>
+        </svg>
+        <span class="brand-text">Vector RAG Lab</span>
+      </a>
+      <nav class="nav-links" aria-label="Navigation principale">
+        <a href="#resultats">Résultats</a>
+        <a href="#comparaison">Comparaison</a>
+        <a href="#rag">RAG</a>
+        <a href="#protocole">Protocole</a>
+      </nav>
+      <a
+        class="repo-link"
+        href="https://github.com/Maaskk/mongodb-qdrant-vector-search-rag"
+        target="_blank"
+        rel="noreferrer"
+      >
+        Dépôt
+      </a>
     </header>
 
-    <main>
-      <section id="method" class="section">
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <canvas id="heroCanvas" aria-label="Visualisation interactive du pipeline RAG"></canvas>
+        <div class="hero-content">
+          <div class="hero-copy">
+            <p class="eyebrow">Master S2 · Data Engineering · NoSQL + IA générative</p>
+            <h1 id="hero-title">MongoDB Vector Search vs Qdrant pour la recherche sémantique et le RAG</h1>
+            <p class="hero-lede">
+              Une comparaison propre entre deux façons d’indexer des embeddings : MongoDB garde les
+              vecteurs avec les documents BSON, Qdrant se concentre sur les collections vectorielles
+              et les payloads. Le site expose le protocole, les résultats disponibles et les limites.
+            </p>
+            <div class="hero-actions">
+              <a class="primary-action" href="#resultats">Explorer les résultats</a>
+              <a class="secondary-action" href="#rag">Tester la logique RAG</a>
+            </div>
+          </div>
+
+          <aside class="mission-readout" aria-label="Résumé du projet">
+            <div class="readout-line">
+              <span>État du projet</span>
+              <strong>Intégré sur main</strong>
+            </div>
+            <div class="readout-grid">
+              <div>
+                <span>Corpus</span>
+                <strong data-stat="chunks">6</strong>
+              </div>
+              <div>
+                <span>Requêtes</span>
+                <strong data-stat="queries">5</strong>
+              </div>
+              <div>
+                <span>Modes MongoDB</span>
+                <strong data-stat="modes">5</strong>
+              </div>
+              <div>
+                <span>Backends</span>
+                <strong data-stat="backends">2</strong>
+              </div>
+            </div>
+            <p>
+              Les chiffres affichés viennent des artefacts committés dans le dépôt, pas d’un texte
+              décoratif.
+            </p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="stat-band" aria-label="Résumé expérimental">
+        <article>
+          <span>MongoDB Recall@5</span>
+          <strong>1.00</strong>
+        </article>
+        <article>
+          <span>MongoDB p50</span>
+          <strong>0.36 ms</strong>
+        </article>
+        <article>
+          <span>Qdrant p50</span>
+          <strong>1.00 ms</strong>
+        </article>
+        <article>
+          <span>Dimension</span>
+          <strong>384</strong>
+        </article>
+        <article>
+          <span>Modèle</span>
+          <strong>MiniLM</strong>
+        </article>
+      </section>
+
+      <section class="section evidence-section" id="resultats" aria-labelledby="resultats-title">
         <div class="section-heading">
-          <p class="eyebrow">What we actually built</p>
-          <h2>Two independent tracks, one frozen contract.</h2>
-        </div>
-        <div class="track-grid">
-          <article class="track-card mongodb">
-            <span>Ossama</span>
-            <h3>MongoDB Vector Search</h3>
-            <p>
-              BSON document model, idempotent ingestion, Atlas Search indexes, exact/vector/text/
-              filtered/hybrid retrieval, and cited RAG answers with refusal behavior.
-            </p>
-            <ul>
-              <li>Five retrieval modes</li>
-              <li>Offline validation artifacts</li>
-              <li>Advanced report section</li>
-            </ul>
-          </article>
-
-          <article class="track-card qdrant">
-            <span>Hamza</span>
-            <h3>Qdrant</h3>
-            <p>
-              Dedicated vector collection, payload metadata, deterministic point ids, keyword
-              payload indexes, dense retrieval, and a local smoke benchmark.
-            </p>
-            <ul>
-              <li>Proper qdrant_track package</li>
-              <li>Filter forwarding</li>
-              <li>Unit-tested without Docker</li>
-            </ul>
-          </article>
-        </div>
-      </section>
-
-      <section class="flow" aria-label="Retrieval augmented generation flow">
-        <div class="flow-step">Corpus</div>
-        <div class="flow-line"></div>
-        <div class="flow-step">Embeddings</div>
-        <div class="flow-line"></div>
-        <div class="flow-step">Vector DB</div>
-        <div class="flow-line"></div>
-        <div class="flow-step">Retrieved evidence</div>
-        <div class="flow-line"></div>
-        <div class="flow-step">Cited answer</div>
-      </section>
-
-      <section id="comparison" class="section split">
-        <div>
-          <p class="eyebrow">Comparison status</p>
-          <h2>Useful now, strict after one more Qdrant export.</h2>
+          <p class="eyebrow">Résultat principal</p>
+          <h2 id="resultats-title">MongoDB est complet côté validation ; Qdrant est intégré mais reste en smoke benchmark.</h2>
           <p>
-            MongoDB has full offline-validation rows. Qdrant has a local smoke result from Hamza's
-            branch. The frontend shows both, but it does not pretend those two environments are the
-            same measurement.
+            La comparaison est volontairement honnête : le pipeline MongoDB possède des artefacts de
+            validation complets, tandis que le travail Qdrant de Hamza a été corrigé et intégré mais
+            doit encore exporter les métriques qrels pour une comparaison stricte.
           </p>
         </div>
-        <div class="metric-board" aria-label="Current benchmark cards">
-          <article>
-            <span>MongoDB validation</span>
-            <strong>Recall@5: 1.00</strong>
-            <p>Functional validation across exact, ANN, filtered ANN, text, and hybrid RRF modes.</p>
+
+        <div class="benchmark-grid">
+          <article class="benchmark-card primary-benchmark">
+            <span>MongoDB Vector Search</span>
+            <strong>5 modes</strong>
+            <p>Exact, ANN, filtré, texte et hybrid RRF sont exportés avec le même contrat.</p>
           </article>
-          <article>
-            <span>Qdrant smoke</span>
-            <strong>p50: 1.00 ms</strong>
-            <p>Local dense-search smoke result; relevance metrics still need export.</p>
+          <article class="benchmark-card">
+            <span>Qdrant</span>
+            <strong>Smoke OK</strong>
+            <p>Backend réparé : imports lazy, ids stables, filtres payload, tests unitaires.</p>
           </article>
-          <article>
-            <span>Shared fairness</span>
-            <strong>384-dim cosine</strong>
-            <p>Both tracks use the frozen corpus, queries, and all-MiniLM-L6-v2 model contract.</p>
+          <article class="benchmark-card">
+            <span>Point de rigueur</span>
+            <strong>Pas de fake</strong>
+            <p>Les mesures offline et smoke ne sont pas vendues comme un benchmark live équivalent.</p>
+          </article>
+        </div>
+
+        <div class="engine-toolbar segmented-control" aria-label="Sélecteur de moteur">
+          <button class="engine-button active" data-engine="mongodb">MongoDB</button>
+          <button class="engine-button" data-engine="qdrant">Qdrant</button>
+          <button class="engine-button" data-engine="comparison">Comparaison</button>
+        </div>
+
+        <div class="dashboard-grid">
+          <article class="panel atlas-chart">
+            <div class="panel-header">
+              <div>
+                <span class="label">Qualité de recherche</span>
+                <h3>Recall@5 selon le mode disponible</h3>
+              </div>
+              <span class="source-tag">benchmark_summary.csv</span>
+            </div>
+            <svg id="qualityChart" class="chart" role="img" aria-label="Recall par backend"></svg>
+          </article>
+
+          <article class="panel engine-profile">
+            <div class="panel-header">
+              <div>
+                <span class="label">Moteur sélectionné</span>
+                <h3 data-profile="name">MongoDB Vector Search</h3>
+              </div>
+              <span class="engine-dot" data-profile="dot"></span>
+            </div>
+            <div class="profile-score">
+              <span data-profile="score">Validation complète</span>
+              <small data-profile="caption">Cinq modes de recherche et RAG déterministe.</small>
+            </div>
+            <div id="profileBars" class="profile-bars"></div>
+          </article>
+
+          <article class="panel leaderboard-panel">
+            <div class="panel-header">
+              <div>
+                <span class="label">Lecture rapide</span>
+                <h3>Ce qu’il faut retenir</h3>
+              </div>
+            </div>
+            <div id="leaderboard" class="leaderboard"></div>
           </article>
         </div>
       </section>
 
-      <section id="lab" class="section lab">
+      <section class="section comparison-section" id="comparaison" aria-labelledby="comparaison-title">
         <div class="section-heading">
-          <p class="eyebrow">Mini lab</p>
-          <h2>Click a question and see the evidence style.</h2>
+          <p class="eyebrow">Comparaison opérationnelle</p>
+          <h2 id="comparaison-title">Deux architectures, deux philosophies de données.</h2>
+          <p>
+            MongoDB privilégie la co-localisation document + métadonnées + vecteurs. Qdrant privilégie
+            un moteur vectoriel spécialisé, avec payloads et index dédiés.
+          </p>
         </div>
-        <div class="lab-grid">
-          <div class="query-list" id="queryList" aria-label="Evaluation questions"></div>
-          <article class="answer-card" aria-live="polite">
-            <span id="answerLabel">Selected query</span>
-            <h3 id="answerTitle">How do MongoDB and Qdrant store vectors with metadata?</h3>
-            <p id="answerText">
-              MongoDB keeps embeddings beside BSON documents; Qdrant stores vectors with payload
-              metadata. Both designs can support semantic search and filters.
-            </p>
-            <div class="citation" id="citationBox">Cites: mongodb-overview:0 · qdrant-overview:0</div>
+
+        <div class="comparison-layout">
+          <article class="panel full-panel">
+            <div class="panel-header">
+              <div>
+                <span class="label">Latence observée</span>
+                <h3>p50 / p95 dans les artefacts actuels</h3>
+              </div>
+              <span class="source-tag">final_comparison.csv</span>
+            </div>
+            <svg id="latencyChart" class="chart tall-chart" role="img" aria-label="Latence observée"></svg>
+          </article>
+
+          <article class="panel method-card">
+            <div class="panel-header">
+              <div>
+                <span class="label">Pipeline commun</span>
+                <h3>Corpus → embeddings → recherche → réponse citée</h3>
+              </div>
+            </div>
+            <div class="pipeline-list">
+              <div><span>01</span><strong>Corpus JSONL validé</strong><p>Chunks, métadonnées, hash et modèle gelé.</p></div>
+              <div><span>02</span><strong>Embeddings 384D</strong><p>MiniLM + similarité cosinus pour garder la comparaison stable.</p></div>
+              <div><span>03</span><strong>Vector Search</strong><p>MongoDB ou Qdrant renvoie les chunks les plus pertinents.</p></div>
+              <div><span>04</span><strong>RAG cité</strong><p>Réponse bornée, contexte non fiable, citations de chunks.</p></div>
+            </div>
           </article>
         </div>
       </section>
 
-      <section id="evidence" class="section evidence">
-        <div>
-          <p class="eyebrow">Repo evidence</p>
-          <h2>The links a professor will actually care about.</h2>
+      <section class="section rag-section" id="rag" aria-labelledby="rag-title">
+        <div class="section-heading">
+          <p class="eyebrow">Mini laboratoire RAG</p>
+          <h2 id="rag-title">Cliquez une question et observez le style de réponse avec preuves.</h2>
+          <p>
+            Cette zone imite le comportement attendu du pipeline : chaque réponse doit citer des
+            chunks connus ou refuser si les preuves sont insuffisantes.
+          </p>
+        </div>
+
+        <div class="rag-layout">
+          <article class="rag-visual">
+            <canvas id="ragCanvas" aria-label="Flux de récupération RAG"></canvas>
+            <div class="rag-hud">
+              <span data-rag="mode">Question active</span>
+              <strong data-rag="qid">q1</strong>
+              <small data-rag="caption">Citations contrôlées</small>
+            </div>
+          </article>
+
+          <article class="panel rag-controls">
+            <div class="panel-header">
+              <div>
+                <span class="label">Questions d’évaluation</span>
+                <h3>Corpus de démonstration</h3>
+              </div>
+            </div>
+            <div class="query-list" id="queryList" aria-label="Questions RAG"></div>
+            <div class="answer-box">
+              <span id="answerLabel">Réponse citée</span>
+              <h3 id="answerTitle">Comment MongoDB et Qdrant stockent les vecteurs avec métadonnées ?</h3>
+              <p id="answerText"></p>
+              <div class="citation" id="citationBox"></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section protocol-section" id="protocole" aria-labelledby="protocole-title">
+        <div class="section-heading">
+          <p class="eyebrow">Protocole et livrables</p>
+          <h2 id="protocole-title">Un site web pour présenter le projet, pas un PDF collé dans une page.</h2>
+          <p>
+            Les liens ci-dessous pointent vers le dépôt, les rapports et le code. Le site reste léger,
+            statique et compatible GitHub Pages.
+          </p>
         </div>
         <div class="evidence-grid">
-          <a href="../src/vector_rag/mongodb_track/benchmark.py">MongoDB benchmark code</a>
-          <a href="../src/vector_rag/qdrant_track/backend.py">Qdrant backend code</a>
-          <a href="../results/mongodb/offline_validation/offline-validation-v1/benchmark_summary.csv">
-            MongoDB summary CSV
-          </a>
-          <a href="../results/qdrant/benchmark_summary.csv">Qdrant smoke summary</a>
-          <a href="../results/comparison/final_comparison.csv">Preliminary comparison CSV</a>
-          <a href="../reports/sections/qdrant.md">Hamza's Qdrant section</a>
+          <a href="https://github.com/Maaskk/mongodb-qdrant-vector-search-rag/blob/main/reports/final_report.md" target="_blank" rel="noreferrer">Rapport final</a>
+          <a href="https://github.com/Maaskk/mongodb-qdrant-vector-search-rag/blob/main/reports/sections/mongodb.md" target="_blank" rel="noreferrer">Section MongoDB</a>
+          <a href="https://github.com/Maaskk/mongodb-qdrant-vector-search-rag/blob/main/reports/sections/qdrant.md" target="_blank" rel="noreferrer">Section Qdrant</a>
+          <a href="https://github.com/Maaskk/mongodb-qdrant-vector-search-rag/blob/main/src/vector_rag/mongodb_track/benchmark.py" target="_blank" rel="noreferrer">Benchmark MongoDB</a>
+          <a href="https://github.com/Maaskk/mongodb-qdrant-vector-search-rag/blob/main/src/vector_rag/qdrant_track/backend.py" target="_blank" rel="noreferrer">Backend Qdrant</a>
+          <a href="https://github.com/Maaskk/mongodb-qdrant-vector-search-rag/blob/main/results/comparison/final_comparison.csv" target="_blank" rel="noreferrer">CSV comparaison</a>
         </div>
       </section>
     </main>
 
-    <footer class="footer">
-      <p>
-        Built for a data-engineering comparison: semantic search, NoSQL design, and grounded RAG.
-      </p>
+    <footer class="site-footer">
+      <p>MongoDB Vector Search vs Qdrant · Projet Master S2 · Recherche sémantique, NoSQL et RAG.</p>
     </footer>
 
-    <script src="assets/app.js"></script>
+    <script src="./assets/app.js"></script>
   </body>
 </html>
