@@ -371,13 +371,43 @@
 
       <section class="section protocol-section" id="protocole" aria-labelledby="protocole-title">
         <div class="section-heading">
-          <p class="eyebrow">Protocole et livrables</p>
-          <h2 id="protocole-title">Un site web pour présenter le projet, pas un PDF collé dans une page.</h2>
+          <p class="eyebrow">Soutenance et démonstration</p>
+          <h2 id="protocole-title">Ce que Hamza doit montrer pendant la démo.</h2>
           <p>
-            Les liens ci-dessous pointent vers le dépôt, les rapports et le code. Le site reste léger,
-            statique et compatible GitHub Pages.
+            Le scénario est volontairement court : poser une question, changer un filtre,
+            comparer les chunks récupérés, puis vérifier que la réponse RAG cite ses sources.
           </p>
         </div>
+
+        <div class="demo-guide-grid" aria-label="Scénario de démonstration pour la soutenance">
+          <article class="demo-step-card">
+            <span>01</span>
+            <strong>Poser la question</strong>
+            <p>Taper une requête naturelle pour montrer que le système cherche par sens, pas seulement par mots-clés.</p>
+          </article>
+          <article class="demo-step-card">
+            <span>02</span>
+            <strong>Changer un filtre</strong>
+            <p>Modifier la catégorie ou le top-k pour relier la recherche sémantique à un besoin métier.</p>
+          </article>
+          <article class="demo-step-card">
+            <span>03</span>
+            <strong>Comparer les chunks</strong>
+            <p>Lire les deux colonnes MongoDB et Qdrant : même question, mêmes documents, deux choix d’architecture.</p>
+          </article>
+          <article class="demo-step-card">
+            <span>04</span>
+            <strong>Lire la réponse citée</strong>
+            <p>Montrer que le RAG répond uniquement à partir des passages retrouvés et affiche les sources utilisées.</p>
+          </article>
+          <article class="demo-step-card">
+            <span>05</span>
+            <strong>Conclure le choix</strong>
+            <p>Utiliser le comparateur pour expliquer quand MongoDB est naturel et quand Qdrant devient intéressant.</p>
+          </article>
+        </div>
+
+        <h3 class="evidence-links-title">Preuves à ouvrir si le professeur demande le code ou les résultats</h3>
         <div class="evidence-grid">
           <a href="https://github.com/Maaskk/mongodb-qdrant-vector-search-rag/blob/main/reports/final_report.md" target="_blank" rel="noreferrer">Rapport final</a>
           <a href="https://github.com/Maaskk/mongodb-qdrant-vector-search-rag/blob/main/reports/sections/mongodb.md" target="_blank" rel="noreferrer">Section MongoDB</a>

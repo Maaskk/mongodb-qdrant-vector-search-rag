@@ -85,6 +85,19 @@ def test_frontend_contains_real_demo_functionalities() -> None:
     assert "updateDecisionComparator" in js
 
 
+def test_frontend_demo_copy_is_presentation_ready_not_meta_pdf_copy() -> None:
+    html = (DOCS / "index.html").read_text(encoding="utf-8")
+
+    assert "Soutenance et démonstration" in html
+    assert "Ce que Hamza doit montrer pendant la démo." in html
+    assert "Scénario de démonstration pour la soutenance" in html
+    assert "Changer un filtre" in html
+    assert "Lire la réponse citée" in html
+    assert "Preuves à ouvrir si le professeur demande" in html
+    assert ("Protocole et " + "livrables") not in html
+    assert ("pas un PDF " + "collé") not in html
+
+
 def test_frontend_does_not_depend_on_external_cdns() -> None:
     html = (DOCS / "index.html").read_text(encoding="utf-8")
 
