@@ -89,7 +89,7 @@ def test_frontend_demo_copy_is_presentation_ready_not_meta_pdf_copy() -> None:
     html = (DOCS / "index.html").read_text(encoding="utf-8")
 
     assert "Soutenance et démonstration" in html
-    assert "Ce que Hamza doit montrer pendant la démo." in html
+    assert "Le parcours à suivre pendant la démo." in html
     assert "Scénario de démonstration pour la soutenance" in html
     assert "Changer un filtre" in html
     assert "Lire la réponse citée" in html
