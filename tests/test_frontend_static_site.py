@@ -66,6 +66,25 @@ def test_frontend_has_interactive_canvas_and_chart_code() -> None:
     assert "--mouse-y" in js
 
 
+def test_frontend_contains_real_demo_functionalities() -> None:
+    html = (DOCS / "index.html").read_text(encoding="utf-8")
+    js = (DOCS / "assets" / "app.js").read_text(encoding="utf-8")
+
+    assert "semanticSearchSection" in html
+    assert "semanticQueryInput" in html
+    assert "categoryFilter" in html
+    assert "runSemanticSearch" in html
+    assert "mongodbResults" in html
+    assert "qdrantResults" in html
+    assert "ragGeneratedAnswer" in html
+    assert "decisionComparator" in html
+    assert "semanticSearch" in js
+    assert "searchCorpus" in js
+    assert "renderSearchResults" in js
+    assert "generateGroundedAnswer" in js
+    assert "updateDecisionComparator" in js
+
+
 def test_frontend_does_not_depend_on_external_cdns() -> None:
     html = (DOCS / "index.html").read_text(encoding="utf-8")
 

@@ -84,9 +84,67 @@ const QUERIES = [
   },
 ];
 
+const CORPUS = [
+  {
+    chunkId: "mongodb-overview:0",
+    title: "MongoDB Vector Search",
+    category: "mongodb",
+    text:
+      "MongoDB Vector Search garde les embeddings avec les documents BSON et les métadonnées, donc la recherche sémantique, les filtres et les mises à jour restent dans une base opérationnelle.",
+  },
+  {
+    chunkId: "qdrant-overview:0",
+    title: "Qdrant Collections",
+    category: "qdrant",
+    text:
+      "Qdrant est une base vectorielle spécialisée. Ses collections stockent les vecteurs avec des payloads, et les index de payload accélèrent les filtres.",
+  },
+  {
+    chunkId: "hnsw-tradeoffs:0",
+    title: "HNSW Trade-offs",
+    category: "indexing",
+    text:
+      "HNSW est un graphe de voisins approximatifs. Une recherche plus large améliore souvent le rappel, mais augmente la latence et le coût.",
+  },
+  {
+    chunkId: "hybrid-search:0",
+    title: "Hybrid Retrieval",
+    category: "retrieval",
+    text:
+      "La recherche hybride combine un matching lexical et une similarité vectorielle. La fusion de rangs réciproques mélange les classements sans comparer les scores bruts.",
+  },
+  {
+    chunkId: "rag-grounding:0",
+    title: "Grounded RAG",
+    category: "rag",
+    text:
+      "Un système RAG robuste récupère des preuves avant génération, cite les chunks utilisés et refuse d’inventer une réponse quand le contexte est insuffisant.",
+  },
+  {
+    chunkId: "metadata-filtering:0",
+    title: "Metadata Filtering",
+    category: "retrieval",
+    text:
+      "Les filtres de métadonnées réduisent la recherche vectorielle par langue, catégorie, source ou date. Les deux bases doivent exécuter les mêmes cas de filtre.",
+  },
+];
+
+const SYNONYMS = {
+  combiner: ["hybride", "fusion", "lexical", "vectorielle"],
+  textuelle: ["lexical", "matching", "hybride"],
+  vectorielle: ["embedding", "sémantique", "vecteurs", "vector"],
+  metadata: ["métadonnées", "payloads", "filtres"],
+  metadonnees: ["métadonnées", "payloads", "filtres"],
+  preuve: ["citations", "chunks", "rag"],
+  preuves: ["citations", "chunks", "rag"],
+  inventer: ["refuse", "insuffisant", "rag"],
+  latence: ["hnsw", "rappel", "coût"],
+};
+
 const state = {
   selectedEngine: "mongodb",
   selectedQuery: QUERIES[0],
+  lastSearchResults: [],
   pointers: {
     global: { x: -9999, y: -9999 },
     hero: { x: -9999, y: -9999 },
@@ -253,6 +311,130 @@ function renderLeaderboard() {
   });
 }
 
+function normalizeText(text) {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .replace(/[^\p{L}\p{N}\s-]/gu, " ");
+}
+
+function tokenize(text) {
+  const baseTokens = normalizeText(text)
+    .split(/\s+/)
+    .map((token) => token.trim())
+    .filter((token) => token.length > 2);
+  const expanded = [...baseTokens];
+  baseTokens.forEach((token) => {
+    (SYNONYMS[token] || []).forEach((synonym) => expanded.push(normalizeText(synonym)));
+  });
+  return expanded;
+}
+
+function semanticSearch(query, { category = "all", topK = 3, backend = "mongodb" } = {}) {
+  const queryTokens = tokenize(query);
+  const filtered = CORPUS.filter((chunk) => category === "all" || chunk.category === category);
+  return filtered
+    .map((chunk) => {
+      const haystack = tokenize(`${chunk.title} ${chunk.category} ${chunk.text}`);
+      const overlap = queryTokens.filter((token) => haystack.includes(token)).length;
+      const categoryBoost = queryTokens.includes(chunk.category) ? 0.14 : 0;
+      const backendBoost =
+        backend === "mongodb" && chunk.category === "mongodb"
+          ? 0.04
+          : backend === "qdrant" && chunk.category === "qdrant"
+            ? 0.04
+            : 0;
+      const score = Math.min(0.99, overlap / Math.max(4, queryTokens.length) + categoryBoost + backendBoost);
+      return { ...chunk, score };
+    })
+    .filter((chunk) => chunk.score > 0)
+    .sort((a, b) => b.score - a.score || a.title.localeCompare(b.title))
+    .slice(0, topK);
+}
+
+function searchCorpus() {
+  const query = document.getElementById("semanticQueryInput").value.trim();
+  const category = document.getElementById("categoryFilter").value;
+  const topK = Number(document.getElementById("topKFilter").value);
+  const mongodb = semanticSearch(query, { category, topK, backend: "mongodb" });
+  const qdrant = semanticSearch(query, { category, topK, backend: "qdrant" });
+  state.lastSearchResults = mongodb.length >= qdrant.length ? mongodb : qdrant;
+
+  renderSearchResults("mongodbResults", mongodb, "vector + text + metadata");
+  renderSearchResults("qdrantResults", qdrant, "dense vector + payload");
+  generateGroundedAnswer(query, state.lastSearchResults);
+
+  const status = document.getElementById("semanticStatus");
+  status.textContent = `${mongodb.length + qdrant.length} résultats affichés · filtre = ${category} · top-k = ${topK}`;
+}
+
+function renderSearchResults(containerId, rows, modeLabel) {
+  const container = document.getElementById(containerId);
+  container.replaceChildren();
+  if (rows.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "result-card";
+    empty.innerHTML = "<strong>Aucun chunk pertinent</strong><p>Le système refuserait de répondre sans preuve suffisante.</p>";
+    container.appendChild(empty);
+    return;
+  }
+  rows.forEach((row, index) => {
+    const card = document.createElement("article");
+    card.className = "result-card";
+    card.innerHTML = `
+      <strong>#${index + 1} · ${row.title}</strong>
+      <p>${row.text}</p>
+      <div class="result-meta">
+        <span>${row.chunkId}</span>
+        <span>${row.category}</span>
+        <span>score ${(row.score * 100).toFixed(0)}%</span>
+        <span>${modeLabel}</span>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function generateGroundedAnswer(query, rows) {
+  const target = document.getElementById("ragGeneratedAnswer");
+  if (!rows.length) {
+    target.innerHTML = `
+      <strong>Refus contrôlé</strong>
+      <p>Preuves insuffisantes dans le contexte récupéré. Le RAG ne doit pas inventer une réponse.</p>
+    `;
+    return;
+  }
+  const citations = rows.slice(0, 2).map((row) => row.chunkId);
+  const answer = rows
+    .slice(0, 2)
+    .map((row) => row.text)
+    .join(" ");
+  target.innerHTML = `
+    <strong>Réponse proposée</strong>
+    <p>${answer}</p>
+    <p><b>Question :</b> ${query}</p>
+    <div>${citations.map((citation) => `<cite>${citation}</cite>`).join(" ")}</div>
+  `;
+}
+
+function updateDecisionComparator() {
+  const documentNeed = Number(document.getElementById("documentNeedRange").value);
+  const vectorNeed = Number(document.getElementById("vectorNeedRange").value);
+  const mongoScore = 6 + documentNeed * 1.4 + Math.max(0, 5 - vectorNeed) * 0.4;
+  const qdrantScore = 6 + vectorNeed * 1.35 + Math.max(0, 5 - documentNeed) * 0.25;
+  const winner = mongoScore >= qdrantScore ? "MongoDB Vector Search" : "Qdrant";
+  const reason =
+    winner === "MongoDB Vector Search"
+      ? "choix plus naturel quand le modèle document, les filtres et la recherche textuelle font partie du même système."
+      : "choix plus naturel quand la spécialisation vectorielle et les collections dédiées deviennent prioritaires.";
+  document.getElementById("decisionOutput").innerHTML = `
+    <strong>${winner}</strong>
+    <p>Score MongoDB : ${mongoScore.toFixed(1)} · Score Qdrant : ${qdrantScore.toFixed(1)}</p>
+    <p>${reason}</p>
+  `;
+}
+
 function renderQueries() {
   const list = document.getElementById("queryList");
   list.replaceChildren();
@@ -410,6 +592,12 @@ function bindEvents() {
       renderProfile();
     });
   });
+  document.getElementById("runSemanticSearch").addEventListener("click", searchCorpus);
+  document.getElementById("semanticQueryInput").addEventListener("input", searchCorpus);
+  document.getElementById("categoryFilter").addEventListener("change", searchCorpus);
+  document.getElementById("topKFilter").addEventListener("change", searchCorpus);
+  document.getElementById("documentNeedRange").addEventListener("input", updateDecisionComparator);
+  document.getElementById("vectorNeedRange").addEventListener("input", updateDecisionComparator);
 }
 
 function init() {
@@ -420,6 +608,8 @@ function init() {
   selectQuery("q1");
   drawQualityChart();
   drawLatencyChart();
+  searchCorpus();
+  updateDecisionComparator();
   drawHeroNetwork();
   drawRagCanvas();
   startGlobalSpaceField();

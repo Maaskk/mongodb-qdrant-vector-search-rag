@@ -8,6 +8,7 @@
       content="Interface web interactive pour comparer MongoDB Vector Search et Qdrant dans un pipeline RAG."
     />
     <title>Laboratoire Vector Search & RAG</title>
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./assets/styles.css" />
   </head>
   <body>
@@ -27,6 +28,7 @@
       <nav class="nav-links" aria-label="Navigation principale">
         <a href="#resultats">Résultats</a>
         <a href="#comparaison">Comparaison</a>
+        <a href="#demo">Démo</a>
         <a href="#rag">RAG</a>
         <a href="#protocole">Protocole</a>
       </nav>
@@ -54,7 +56,7 @@
             </p>
             <div class="hero-actions">
               <a class="primary-action" href="#resultats">Explorer les résultats</a>
-              <a class="secondary-action" href="#rag">Tester la logique RAG</a>
+              <a class="secondary-action" href="#demo">Tester le moteur</a>
             </div>
           </div>
 
@@ -221,6 +223,110 @@
               <div><span>03</span><strong>Vector Search</strong><p>MongoDB ou Qdrant renvoie les chunks les plus pertinents.</p></div>
               <div><span>04</span><strong>RAG cité</strong><p>Réponse bornée, contexte non fiable, citations de chunks.</p></div>
             </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section demo-section" id="demo" aria-labelledby="demo-title">
+        <div class="section-heading">
+          <p class="eyebrow">Démonstrateur interactif</p>
+          <h2 id="demo-title">Tapez une question et observez la recherche sémantique se construire.</h2>
+          <p>
+            Cette démo tourne entièrement dans le navigateur à partir du mini-corpus du projet. Elle
+            ne remplace pas MongoDB Atlas ou Qdrant, mais elle rend visibles les étapes : requête,
+            filtre, scores, chunks récupérés et réponse RAG citée.
+          </p>
+        </div>
+
+        <div class="demo-console" id="semanticSearchSection">
+          <article class="panel search-workbench">
+            <div class="panel-header">
+              <div>
+                <span class="label">Recherche sémantique simulée</span>
+                <h3>Question utilisateur + filtre métier</h3>
+              </div>
+              <span class="source-tag">data/demo/corpus.jsonl</span>
+            </div>
+
+            <label class="input-label" for="semanticQueryInput">Question à poser au système</label>
+            <textarea id="semanticQueryInput" rows="3">Comment combiner recherche textuelle et recherche vectorielle ?</textarea>
+
+            <div class="control-row">
+              <label for="categoryFilter">
+                Catégorie
+                <select id="categoryFilter">
+                  <option value="all">Toutes</option>
+                  <option value="mongodb">MongoDB</option>
+                  <option value="qdrant">Qdrant</option>
+                  <option value="retrieval">Retrieval</option>
+                  <option value="rag">RAG</option>
+                  <option value="indexing">Indexing</option>
+                </select>
+              </label>
+              <label for="topKFilter">
+                Top-k
+                <select id="topKFilter">
+                  <option value="2">2</option>
+                  <option value="3" selected>3</option>
+                  <option value="5">5</option>
+                </select>
+              </label>
+              <button id="runSemanticSearch" class="primary-action" type="button">Lancer la recherche</button>
+            </div>
+
+            <div class="demo-status" id="semanticStatus">
+              Embedding local simulé : tokens pondérés + correspondance sémantique simple.
+            </div>
+          </article>
+
+          <article class="panel search-results-panel">
+            <div class="panel-header">
+              <div>
+                <span class="label">Résultats récupérés</span>
+                <h3>MongoDB vs Qdrant, même requête</h3>
+              </div>
+            </div>
+            <div class="retrieval-columns">
+              <div>
+                <h4>MongoDB Vector Search</h4>
+                <div id="mongodbResults" class="result-list"></div>
+              </div>
+              <div>
+                <h4>Qdrant</h4>
+                <div id="qdrantResults" class="result-list"></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel generated-answer-panel">
+            <div class="panel-header">
+              <div>
+                <span class="label">Réponse RAG générée</span>
+                <h3>Réponse bornée par les chunks récupérés</h3>
+              </div>
+              <span class="source-tag">citations obligatoires</span>
+            </div>
+            <div id="ragGeneratedAnswer" class="generated-answer"></div>
+          </article>
+
+          <article class="panel decision-panel" id="decisionComparator">
+            <div class="panel-header">
+              <div>
+                <span class="label">Comparateur de décision</span>
+                <h3>Quel moteur choisir selon le besoin ?</h3>
+              </div>
+            </div>
+            <div class="decision-controls">
+              <label>
+                Importance du modèle document
+                <input id="documentNeedRange" type="range" min="0" max="10" value="8" />
+              </label>
+              <label>
+                Importance de la spécialisation vectorielle
+                <input id="vectorNeedRange" type="range" min="0" max="10" value="6" />
+              </label>
+            </div>
+            <div id="decisionOutput" class="decision-output"></div>
           </article>
         </div>
       </section>
