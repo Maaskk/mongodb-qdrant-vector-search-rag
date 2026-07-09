@@ -38,19 +38,19 @@ const ENGINES = {
 };
 
 const QUALITY_ROWS = [
-  { label: "exact", backend: "MongoDB", value: 1.0, color: "#8f1d2c" },
-  { label: "ann", backend: "MongoDB", value: 1.0, color: "#8f1d2c" },
-  { label: "filtered", backend: "MongoDB", value: 1.0, color: "#8f1d2c" },
-  { label: "text", backend: "MongoDB", value: 1.0, color: "#8f1d2c" },
-  { label: "hybrid", backend: "MongoDB", value: 1.0, color: "#8f1d2c" },
-  { label: "dense", backend: "Qdrant", value: 0.0, color: "#0f7c80", note: "à exporter" },
+  { label: "exact", backend: "MongoDB", value: 1.0, color: "#8f1d2c", note: "validé" },
+  { label: "ann", backend: "MongoDB", value: 1.0, color: "#8f1d2c", note: "offline" },
+  { label: "filtered", backend: "MongoDB", value: 1.0, color: "#8f1d2c", note: "validé" },
+  { label: "text", backend: "MongoDB", value: 1.0, color: "#8f1d2c", note: "validé" },
+  { label: "hybrid", backend: "MongoDB", value: 1.0, color: "#8f1d2c", note: "validé" },
+  { label: "qrels", backend: "Qdrant", value: 0.0, color: "#0f7c80", note: "à exporter" },
 ];
 
 const LATENCY_ROWS = [
-  { label: "MongoDB p50", value: 0.36, color: "#8f1d2c" },
-  { label: "MongoDB p95", value: 0.72, color: "#8f1d2c" },
-  { label: "Qdrant p50", value: 1.0, color: "#0f7c80" },
-  { label: "Qdrant p95", value: 2.0, color: "#0f7c80" },
+  { label: "MongoDB offline p50", value: 0.36, color: "#8f1d2c" },
+  { label: "MongoDB offline p95", value: 0.72, color: "#8f1d2c" },
+  { label: "Qdrant smoke p50", value: 1.0, color: "#0f7c80" },
+  { label: "Qdrant smoke p95", value: 2.0, color: "#0f7c80" },
 ];
 
 const QUERIES = [
@@ -204,7 +204,7 @@ function drawQualityChart() {
   QUALITY_ROWS.forEach((row, index) => {
     const x = bounds.left + index * gap + gap * 0.16;
     const barWidth = gap * 0.62;
-    const value = row.note ? 0.18 : row.value;
+    const value = row.note === "à exporter" ? 0.18 : row.value;
     const y = yScale(value);
     svg.appendChild(svgElement("rect", {
       x,
@@ -220,7 +220,7 @@ function drawQualityChart() {
       "text-anchor": "middle",
       class: "chart-label",
     });
-    drawText(svg, row.note || row.value.toFixed(2), x + barWidth / 2, y - 10, {
+    drawText(svg, row.note || "validé", x + barWidth / 2, y - 10, {
       "font-size": 12,
       "font-weight": 900,
       "text-anchor": "middle",

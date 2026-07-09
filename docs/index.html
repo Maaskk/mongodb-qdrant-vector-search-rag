@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Interface web interactive pour comparer MongoDB Vector Search et Qdrant dans un pipeline RAG."
+      content="Démonstrateur pédagogique pour visualiser MongoDB Vector Search, Qdrant et un pipeline RAG cité."
     />
     <title>Laboratoire Vector Search & RAG</title>
     <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
@@ -52,7 +52,8 @@
             <p class="hero-lede">
               Une comparaison propre entre deux façons d’indexer des embeddings : MongoDB garde les
               vecteurs avec les documents BSON, Qdrant se concentre sur les collections vectorielles
-              et les payloads. Le site expose le protocole, les résultats disponibles et les limites.
+              et les payloads. Le site est une démo pédagogique : il expose le protocole, les preuves
+              disponibles et les limites sans vendre un benchmark live.
             </p>
             <div class="hero-actions">
               <a class="primary-action" href="#resultats">Explorer les résultats</a>
@@ -93,24 +94,24 @@
 
       <section class="stat-band" aria-label="Résumé expérimental">
         <article>
-          <span>MongoDB Recall@5</span>
-          <strong>1.00</strong>
+          <span>Corpus smoke</span>
+          <strong>6</strong>
         </article>
         <article>
-          <span>MongoDB p50</span>
-          <strong>0.36 ms</strong>
+          <span>Requêtes test</span>
+          <strong>5</strong>
         </article>
         <article>
-          <span>Qdrant p50</span>
-          <strong>1.00 ms</strong>
+          <span>MongoDB modes</span>
+          <strong>5</strong>
         </article>
         <article>
-          <span>Dimension</span>
-          <strong>384</strong>
+          <span>Qdrant</span>
+          <strong>Smoke OK</strong>
         </article>
         <article>
-          <span>Modèle</span>
-          <strong>MiniLM</strong>
+          <span>Embedding</span>
+          <strong>384D</strong>
         </article>
       </section>
 
@@ -153,12 +154,12 @@
           <article class="panel atlas-chart">
             <div class="panel-header">
               <div>
-                <span class="label">Qualité de recherche</span>
-                <h3>Recall@5 selon le mode disponible</h3>
+                <span class="label">Validation disponible</span>
+                <h3>Ce qui est validé ou encore à exporter</h3>
               </div>
-              <span class="source-tag">benchmark_summary.csv</span>
+              <span class="source-tag">artefacts du dépôt</span>
             </div>
-            <svg id="qualityChart" class="chart" role="img" aria-label="Recall par backend"></svg>
+            <svg id="qualityChart" class="chart" role="img" aria-label="Validation disponible par backend"></svg>
           </article>
 
           <article class="panel engine-profile">
@@ -202,12 +203,12 @@
           <article class="panel full-panel">
             <div class="panel-header">
               <div>
-                <span class="label">Latence observée</span>
-                <h3>p50 / p95 dans les artefacts actuels</h3>
+                <span class="label">Mesures à ne pas sur-vendre</span>
+                <h3>Les latences actuelles sont des repères de validation, pas un verdict.</h3>
               </div>
-              <span class="source-tag">final_comparison.csv</span>
+              <span class="source-tag">offline / smoke</span>
             </div>
-            <svg id="latencyChart" class="chart tall-chart" role="img" aria-label="Latence observée"></svg>
+            <svg id="latencyChart" class="chart tall-chart" role="img" aria-label="Repères de latence offline et smoke"></svg>
           </article>
 
           <article class="panel method-card">

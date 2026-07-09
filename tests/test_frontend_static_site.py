@@ -85,6 +85,19 @@ def test_frontend_contains_real_demo_functionalities() -> None:
     assert "updateDecisionComparator" in js
 
 
+def test_frontend_uses_defendable_benchmark_wording() -> None:
+    html = (DOCS / "index.html").read_text(encoding="utf-8")
+
+    assert "démo pédagogique" in html
+    assert "sans vendre un benchmark live" in html
+    assert "Corpus smoke" in html
+    assert "Qdrant</span>\n          <strong>Smoke OK</strong>" in html
+    assert "Les latences actuelles sont des repères de validation, pas un verdict." in html
+    assert "MongoDB Recall@5" not in html
+    assert "MongoDB p50" not in html
+    assert "Qdrant p50" not in html
+
+
 def test_frontend_demo_copy_is_presentation_ready_not_meta_pdf_copy() -> None:
     html = (DOCS / "index.html").read_text(encoding="utf-8")
 

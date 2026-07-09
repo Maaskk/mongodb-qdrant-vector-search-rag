@@ -4,11 +4,21 @@
 
 **Étude :** Indexation vectorielle dans les bases NoSQL : MongoDB Vector Search vs Qdrant pour la recherche sémantique et le RAG.
 
-This public Master S2 data-engineering project compares two complete retrieval-augmented generation pipelines over the same corpus, embedding model, queries, relevance labels, and output contracts.
+Ce projet Master S2 est un **prototype reproductible + protocole d'évaluation**. Il ne prétend pas encore prouver qu'un moteur est définitivement meilleur que l'autre. L'objectif est de montrer comment comparer proprement deux architectures de recherche pour un pipeline RAG.
+
+## Important : est-ce qu'on a entraîné un modèle ?
+
+Non. Le projet ne fait pas de training deep learning.
+
+On utilise un modèle déjà entraîné, `sentence-transformers/all-MiniLM-L6-v2`, pour transformer les textes et les questions en vecteurs de 384 dimensions. Ces vecteurs sont ensuite stockés/recherchés dans MongoDB ou Qdrant.
+
+Donc le projet est surtout un projet de **Data Engineering / NoSQL / Retrieval Evaluation**, pas un projet de training ML.
 
 ## Frontend Demo
 
 The project includes a handcrafted static frontend in [docs/index.html](docs/index.html). It is designed for GitHub Pages and presents the method, current evidence, mini RAG lab, and links a professor can audit quickly.
+
+The website is a **pedagogical interactive demo**. It helps visualize question → filter → retrieved chunks → cited answer. It is not a live MongoDB Atlas/Qdrant benchmark.
 
 If GitHub Pages is enabled for the repo, the expected public URL is:
 
@@ -21,6 +31,7 @@ https://maaskk.github.io/mongodb-qdrant-vector-search-rag/
 - Ossama's MongoDB track is complete as an offline-validation pipeline with five retrieval modes, grounded RAG controls, benchmark artifacts, and a report section.
 - Hamza's Qdrant branch was integrated and repaired into `src/vector_rag/qdrant_track/`; it now has lazy optional dependencies, deterministic point IDs, filter forwarding, unit tests, and a smoke benchmark summary.
 - The committed final comparison is intentionally honest: MongoDB has functional validation artifacts, while Qdrant still needs a full qrels-backed export before strict quality claims.
+- The current corpus is small. It proves the workflow, not general performance.
 
 ## Research Question
 

@@ -1,0 +1,20 @@
+SCRIPT OSSAMA - VERSION COURTE
+Temps cible : environ 3 minutes.
+
+Slide 1 - Ouverture
+Bonjour Monsieur. Notre projet est un projet de data engineering autour de MongoDB Vector Search, Qdrant et RAG. On n'a pas entraîné un modèle. On utilise MiniLM, un modèle déjà entraîné, pour transformer les textes en vecteurs.
+
+Slide 2 - Problème
+Dans un RAG, la réponse dépend d'abord des passages récupérés. Si le retrieval est mauvais, la réponse finale sera mauvaise aussi. Donc notre sujet se concentre sur les chunks, embeddings, indexation, filtres, scores et citations.
+
+Slide 3 - Question
+Notre question n'est pas : qui gagne toujours ? Elle est : quand MongoDB est plus naturel, et quand Qdrant devient plus intéressant ? Pour comparer proprement, il faut le même corpus, le même encodeur, les mêmes requêtes, les mêmes qrels et les mêmes métriques.
+
+Slide 4 - Architecture
+Le pipeline est simple : documents, chunks, embeddings 384D avec MiniLM, puis recherche dans MongoDB ou Qdrant. Ensuite, les chunks récupérés servent à construire une réponse citée.
+
+Slide 5 - Ma partie MongoDB
+Dans MongoDB, chaque chunk garde son texte, ses métadonnées, son hash et son embedding. J'ai validé plusieurs parcours : recherche vectorielle, recherche filtrée, recherche textuelle et hybrid RRF. Le point important est l'honnêteté : ces résultats valident le workflow offline, mais ce ne sont pas des mesures live Atlas.
+
+Transition
+Voilà pour le cadrage et MongoDB. Hamza va maintenant présenter Qdrant, la démo pédagogique et la conclusion.

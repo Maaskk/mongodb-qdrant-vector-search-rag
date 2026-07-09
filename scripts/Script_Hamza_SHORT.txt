@@ -1,0 +1,20 @@
+SCRIPT HAMZA - VERSION COURTE
+Temps cible : environ 2 minutes 30.
+
+Slide 6 - Qdrant
+Merci Ossama. Qdrant représente l'option moteur vectoriel spécialisé. On crée une collection, chaque point contient un vecteur et un payload avec les métadonnées. Le résultat actuel est un smoke test local : le flux fonctionne, mais ce n'est pas encore un benchmark complet.
+
+Slide 7 - Démo
+Le site est un démonstrateur pédagogique. Je tape une question, je change un filtre, je montre les chunks récupérés, puis la réponse citée. La démo navigateur sert à expliquer le pipeline, pas à prouver une performance live.
+
+Slide 8 - Preuves
+Aujourd'hui, on a un mini-corpus de 6 chunks, 5 questions, une validation offline côté MongoDB et un smoke test local côté Qdrant. Donc on ne dit pas qu'un moteur écrase l'autre.
+
+Slide 9 - Originalité
+Le sujet se démarque parce qu'il relie NoSQL, bases vectorielles, RAG et évaluation. Ce n'est pas seulement une application IA : c'est une réflexion sur l'architecture data derrière un RAG fiable.
+
+Slide 10 - Suite
+Pour une vraie comparaison stricte, il faut un corpus plus grand, plus de requêtes, des qrels vérifiés, MongoDB Atlas et Qdrant dans le même environnement, puis Recall, MRR, nDCG et p50/p95.
+
+Slide 11 - Conclusion
+MongoDB est naturel quand documents, filtres, texte et vecteurs vivent ensemble. Qdrant est naturel quand on veut un moteur vectoriel séparé et spécialisé. Notre projet rend ce choix visible, sans vendre de faux résultat. Merci.
