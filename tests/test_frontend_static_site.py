@@ -33,7 +33,7 @@ def test_frontend_copy_names_both_tracks_and_avoids_placeholders() -> None:
     assert "placeholder" not in combined
 
 
-def test_frontend_uses_dark_enterprise_ai_style() -> None:
+def test_frontend_uses_professional_master_level_style() -> None:
     html = (DOCS / "index.html").read_text(encoding="utf-8")
     css = (DOCS / "assets" / "styles.css").read_text(encoding="utf-8")
 
@@ -45,16 +45,19 @@ def test_frontend_uses_dark_enterprise_ai_style() -> None:
     assert "stat-band" in html
     assert "dashboard-grid" in html
     assert "segmented-control" in html
-    assert "color-scheme: dark" in css
-    assert "#0b1220" in css.lower()
-    assert "#111827" in css.lower()
-    assert "#38bdf8" in css.lower()
-    assert "#10b981" in css.lower()
-    assert "#f59e0b" in css.lower()
+    assert "color-scheme: light" in css
+    assert "#f8fafc" in css.lower()
+    assert "#ffffff" in css.lower()
+    assert "#0f172a" in css.lower()
+    assert "#0284c7" in css.lower()
+    assert "#059669" in css.lower()
+    assert "#d97706" in css.lower()
     assert "--accent-red" in css
     assert "--accent-teal" in css
-    assert "color-scheme: light" not in css
+    assert ("color-scheme: " + "dark") not in css
     assert "#11100e" not in css.lower()
+    assert ("#0b" + "1220") not in css.lower()
+    assert ("#111" + "827") not in css.lower()
     assert ("#fff" + "4f5") not in css.lower()
     assert ("#8f" + "1d2c") not in css.lower()
     assert "Georgia" not in css

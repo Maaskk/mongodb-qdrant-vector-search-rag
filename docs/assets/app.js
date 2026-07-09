@@ -1,7 +1,7 @@
 const ENGINES = {
   mongodb: {
     label: "MongoDB Vector Search",
-    color: "#10b981",
+    color: "#059669",
     score: "Validation complète",
     caption: "Cinq modes de recherche, RAG cité et artefacts offline.",
     bars: [
@@ -13,7 +13,7 @@ const ENGINES = {
   },
   qdrant: {
     label: "Qdrant",
-    color: "#38bdf8",
+    color: "#0284c7",
     score: "Smoke intégré",
     caption: "Backend corrigé et testable ; métriques qrels encore à exporter.",
     bars: [
@@ -25,7 +25,7 @@ const ENGINES = {
   },
   comparison: {
     label: "Comparaison finale",
-    color: "#f59e0b",
+    color: "#d97706",
     score: "Préliminaire",
     caption: "La comparaison reste honnête tant que les environnements diffèrent.",
     bars: [
@@ -38,19 +38,19 @@ const ENGINES = {
 };
 
 const QUALITY_ROWS = [
-  { label: "exact", backend: "MongoDB", value: 1.0, color: "#10b981", note: "validé" },
-  { label: "ann", backend: "MongoDB", value: 1.0, color: "#10b981", note: "offline" },
-  { label: "filtered", backend: "MongoDB", value: 1.0, color: "#10b981", note: "validé" },
-  { label: "text", backend: "MongoDB", value: 1.0, color: "#10b981", note: "validé" },
-  { label: "hybrid", backend: "MongoDB", value: 1.0, color: "#10b981", note: "validé" },
-  { label: "qrels", backend: "Qdrant", value: 0.0, color: "#38bdf8", note: "à exporter" },
+  { label: "exact", backend: "MongoDB", value: 1.0, color: "#059669", note: "validé" },
+  { label: "ann", backend: "MongoDB", value: 1.0, color: "#059669", note: "offline" },
+  { label: "filtered", backend: "MongoDB", value: 1.0, color: "#059669", note: "validé" },
+  { label: "text", backend: "MongoDB", value: 1.0, color: "#059669", note: "validé" },
+  { label: "hybrid", backend: "MongoDB", value: 1.0, color: "#059669", note: "validé" },
+  { label: "qrels", backend: "Qdrant", value: 0.0, color: "#0284c7", note: "à exporter" },
 ];
 
 const LATENCY_ROWS = [
-  { label: "MongoDB offline p50", value: 0.36, color: "#10b981" },
-  { label: "MongoDB offline p95", value: 0.72, color: "#10b981" },
-  { label: "Qdrant smoke p50", value: 1.0, color: "#38bdf8" },
-  { label: "Qdrant smoke p95", value: 2.0, color: "#38bdf8" },
+  { label: "MongoDB offline p50", value: 0.36, color: "#059669" },
+  { label: "MongoDB offline p95", value: 0.72, color: "#059669" },
+  { label: "Qdrant smoke p50", value: 1.0, color: "#0284c7" },
+  { label: "Qdrant smoke p95", value: 2.0, color: "#0284c7" },
 ];
 
 const QUERIES = [
@@ -515,11 +515,11 @@ function drawHeroNetwork() {
   const { ctx, width, height } = resizeCanvas(canvas);
   ctx.clearRect(0, 0, width, height);
   const nodes = [
-    { x: width * 0.58, y: height * 0.25, label: "Corpus", color: "#10b981" },
-    { x: width * 0.78, y: height * 0.34, label: "Embeddings", color: "#38bdf8" },
-    { x: width * 0.64, y: height * 0.57, label: "MongoDB", color: "#10b981" },
-    { x: width * 0.84, y: height * 0.64, label: "Qdrant", color: "#38bdf8" },
-    { x: width * 0.72, y: height * 0.82, label: "RAG cité", color: "#f59e0b" },
+    { x: width * 0.58, y: height * 0.25, label: "Corpus", color: "#059669" },
+    { x: width * 0.78, y: height * 0.34, label: "Embeddings", color: "#0284c7" },
+    { x: width * 0.64, y: height * 0.57, label: "MongoDB", color: "#059669" },
+    { x: width * 0.84, y: height * 0.64, label: "Qdrant", color: "#0284c7" },
+    { x: width * 0.72, y: height * 0.82, label: "RAG cité", color: "#d97706" },
   ];
   ctx.lineWidth = 2;
   nodes.forEach((node, i) => {
@@ -536,7 +536,7 @@ function drawHeroNetwork() {
     ctx.beginPath();
     ctx.arc(node.x, node.y, 10, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = "#f8fafc";
+    ctx.fillStyle = "#0f172a";
     ctx.font = "800 13px Inter, system-ui, sans-serif";
     ctx.fillText(node.label, node.x + 15, node.y + 5);
   });
@@ -548,10 +548,10 @@ function drawRagCanvas() {
   ctx.clearRect(0, 0, width, height);
   const active = state.selectedQuery;
   const steps = [
-    ["Question", active.id, "#10b981"],
-    ["Vector search", "top-k", "#38bdf8"],
+    ["Question", active.id, "#059669"],
+    ["Vector search", "top-k", "#0284c7"],
     ["Chunks", active.cites.length, "#2563eb"],
-    ["Answer", "cité", "#f59e0b"],
+    ["Answer", "cité", "#d97706"],
   ];
   const y = height * 0.5;
   const gap = width / (steps.length + 1);
