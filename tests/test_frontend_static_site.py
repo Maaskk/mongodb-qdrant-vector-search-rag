@@ -33,7 +33,7 @@ def test_frontend_copy_names_both_tracks_and_avoids_placeholders() -> None:
     assert "placeholder" not in combined
 
 
-def test_frontend_uses_light_gnn_reference_style_not_dark_pdf_cover() -> None:
+def test_frontend_uses_dark_enterprise_ai_style() -> None:
     html = (DOCS / "index.html").read_text(encoding="utf-8")
     css = (DOCS / "assets" / "styles.css").read_text(encoding="utf-8")
 
@@ -45,12 +45,18 @@ def test_frontend_uses_light_gnn_reference_style_not_dark_pdf_cover() -> None:
     assert "stat-band" in html
     assert "dashboard-grid" in html
     assert "segmented-control" in html
-    assert "color-scheme: light" in css
+    assert "color-scheme: dark" in css
+    assert "#0b1220" in css.lower()
+    assert "#111827" in css.lower()
+    assert "#38bdf8" in css.lower()
+    assert "#10b981" in css.lower()
+    assert "#f59e0b" in css.lower()
     assert "--accent-red" in css
     assert "--accent-teal" in css
-    assert "#ffffff" in css.lower()
-    assert "color-scheme: dark" not in css
+    assert "color-scheme: light" not in css
     assert "#11100e" not in css.lower()
+    assert ("#fff" + "4f5") not in css.lower()
+    assert ("#8f" + "1d2c") not in css.lower()
     assert "Georgia" not in css
 
 
